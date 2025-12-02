@@ -1,0 +1,25 @@
+{
+  "name": "sse-playground",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "npx nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jonathansedrez/sse-playground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jonathansedrez/sse-playground/issues"
+  },
+  "homepage": "https://github.com/jonathansedrez/sse-playground#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}
