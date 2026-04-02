@@ -29,7 +29,26 @@ wss.on("connection", (ws: WebSocket) => {
 const connect = async (): Promise<void> => {
   await pgClient.connect();
   console.log("Postgres connected");
-  console.log("WebSocket server running on ws://localhost:8001");
+
+  await pgClient.query("LISTEN table_changes");
+  console.log("Listening for DB changes...");
+
+  pgClient.on("notification", ({ channel, payload }) => {
+    if (!payload) return;
+    console.log("DB change received:", payload);
+
+    const message = JSON.stringify({
+      type: "db_change",
+      channel,
+      data: JSON.parse(payload),
+    });
+
+    wss.clients.forEach((client) => {
+      if (client.readyState === 1) {
+        client.send(message);
+      }
+    });
+  });
 };
 
 connect();
