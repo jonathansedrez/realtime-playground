@@ -1,5 +1,7 @@
 # WebSocket Server
 
+Real-time WebSocket server that listens to PostgreSQL notifications and broadcasts them to connected clients.
+
 ## Getting Started
 
 ### 1. Start the database
@@ -18,4 +20,44 @@ npm install
 
 ```bash
 npm run dev
+```
+
+## Commands
+
+| Command         | Description                                    |
+| --------------- | ---------------------------------------------- |
+| `npm run dev`   | Run server in development mode with hot reload |
+| `npm run build` | Compile TypeScript to JavaScript               |
+| `npm start`     | Run compiled server from `dist/`               |
+
+## Testing
+
+### Connect to WebSocket
+
+```bash
+npx wscat -c ws://localhost:8001
+```
+
+### Insert data with notification
+
+```bash
+docker exec -i websocket-server-db-1 psql -U postgres -d syncpoc -c \
+  "WITH new_issue AS (INSERT INTO issues (title) VALUES ('my issue') RETURNING *) \
+   SELECT pg_notify('table_changes', row_to_json(new_issue)::text) FROM new_issue;"
+```
+
+## Message Format
+
+WebSocket clients receive messages in the following format:
+
+```json
+{
+  "type": "db_change",
+  "channel": "table_changes",
+  "data": {
+    "id": 1,
+    "title": "my issue",
+    "created_at": "2026-04-01T22:00:00.000Z"
+  }
+}
 ```
