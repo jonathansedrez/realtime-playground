@@ -38,12 +38,11 @@ npm run dev
 npx wscat -c ws://localhost:8001
 ```
 
-### Insert data with notification
+### Insert data (triggers notification automatically)
 
 ```bash
 docker exec -i websocket-server-db-1 psql -U postgres -d syncpoc -c \
-  "WITH new_issue AS (INSERT INTO issues (title) VALUES ('my issue') RETURNING *) \
-   SELECT pg_notify('table_changes', row_to_json(new_issue)::text) FROM new_issue;"
+  "INSERT INTO issues (title) VALUES ('my issue');"
 ```
 
 ## Message Format
